@@ -1,0 +1,23 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+terraform.tfvars
+crash.log
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Credentials
+*.json
+credentials*
+service-account*
+
+# Editor
+.vscode/
+.idea/
