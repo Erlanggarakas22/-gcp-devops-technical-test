@@ -1,5 +1,7 @@
 import os
 import logging
+import socket
+from datetime import datetime
 
 import psycopg2
 from flask import Flask, jsonify
@@ -26,6 +28,10 @@ def index():
         application="gcp-devops-technical-test",
         message="Hello from Cloud Run",
         status="running",
+        version="manual-v7",
+        hostname=socket.gethostname(),
+        environment=os.getenv("ENV", "development"),
+        timestamp=datetime.utcnow().isoformat() + "Z",
     ), 200
 
 
@@ -33,7 +39,7 @@ def index():
 def version():
     return jsonify(
         application="gcp-devops-technical-test",
-        version="manual-v6",
+        version="manual-v7",
         flask="3.1.1",
     ), 200
 
@@ -50,6 +56,15 @@ def health():
 def ready():
     return jsonify(
         status="ready",
+    ), 200
+
+
+@app.route("/info", methods=["GET"])
+def info():
+    return jsonify(
+        hostname=socket.gethostname(),
+        environment=os.getenv("ENV", "development"),
+        python_version=os.sys.version.split()[0],
     ), 200
 
 
