@@ -13,14 +13,19 @@ env:
   PROJECT_ID: project-7b6e6bad-41d2-452f-974
   REGION: asia-southeast2
   REPOSITORY: devops-test-app-repository
-  SERVICE: devops-test-app-dev
   IMAGE: devops-test-app
+  SERVICE: devops-test-app-dev
+
   WORKLOAD_IDENTITY_PROVIDER: projects/379699849683/locations/global/workloadIdentityPools/github-pool/providers/github-provider
   SERVICE_ACCOUNT: github-actions-deployer@project-7b6e6bad-41d2-452f-974.iam.gserviceaccount.com
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout source
@@ -33,7 +38,7 @@ jobs:
           workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
 
-      - name: Set up Google Cloud SDK
+      - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v3
 
       - name: Configure Docker
@@ -44,7 +49,7 @@ jobs:
         run: |
           docker build \
             -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }} \
-            .
+            ./app
 
       - name: Push Docker Image
         run: |
@@ -59,7 +64,7 @@ jobs:
           region: ${{ env.REGION }}
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}
 
-      - name: Show Service URL
+      - name: Show Cloud Run URL
         run: |
           echo "Cloud Run URL:"
           echo "${{ steps.deploy.outputs.url }}"
