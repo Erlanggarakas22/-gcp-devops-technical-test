@@ -32,4 +32,3 @@ autohealing. Dashboards should track process RSS, heap utilization,
 garbage-collection activity, OOM events, latency, error rate, and restart
 count. Finally, an operational runbook and capacity baseline should document
 safe traffic, memory, and concurrency limits.
-EOF
