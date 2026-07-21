@@ -13,6 +13,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      PROJECT_ID: project-7b6e6bad-41d2-452f-974
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -22,11 +25,30 @@ jobs:
         with:
           workload_identity_provider: projects/379699849683/locations/global/workloadIdentityPools/github-pool/providers/github-provider
           service_account: github-actions-deployer@project-7b6e6bad-41d2-452f-974.iam.gserviceaccount.com
+          project_id: ${{ env.PROJECT_ID }}
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v3
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Set active project
+        run: |
+          gcloud config set project $PROJECT_ID
 
       - name: Verify Authentication
         run: |
+          echo "Current account:"
           gcloud auth list
+
+          echo ""
+          echo "Current config:"
           gcloud config list
+
+          echo ""
+          echo "Current project:"
+          gcloud config get-value project
+
+          echo ""
+          echo "Project info:"
+          gcloud projects describe $PROJECT_ID
