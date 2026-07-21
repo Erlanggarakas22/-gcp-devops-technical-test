@@ -58,4 +58,3 @@ use Cloud Logging for structured application and Cloud Run platform logs.
 Logs can be converted into log-based metrics when specific events must
 trigger alerts. Both should use common labels such as service, revision,
 environment, trace ID, and severity.
-EOF
