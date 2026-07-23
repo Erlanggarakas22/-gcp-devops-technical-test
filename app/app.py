@@ -26,7 +26,7 @@ def get_database_connection():
 def index():
     return jsonify(
         application="gcp-devops-technical-test",
-        message="Hello from Cloud Run",
+        message="Hello from Cloud Run V2",
         status="running",
         version="manual-v7",
         hostname=socket.gethostname(),
